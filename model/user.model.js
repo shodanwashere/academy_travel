@@ -5,17 +5,14 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'username'"]
   },
-  password: {
-    type: mongoose.Schema.Types.String,
-    required: [true, "Enter a valid value for 'password'"]
-  },
   name: {
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'name'"]
   },
   password: {
     type: mongoose.Schema.Types.String,
-    required: [true, "Enter a valid value for 'password'"]
+    required: [true, "Enter a valid value for 'password'"],
+    select: false
   },
   isAdmin: {
     type: mongoose.Schema.Types.Boolean,

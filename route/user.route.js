@@ -5,7 +5,7 @@ const controller = require('../controller/user.controller.js');
 router.use((req, res, next) => {
   const currDate = new Date();
   const timestamp = '['+currDate.getHours()+':'+currDate.getMinutes()+':'+currDate.getSeconds()+']';
-  console.log(timestamp + ' ' + req.method + ' ' + req.path);
+  console.log(timestamp + ' ' + req.method + ' /user' + req.path);
   next();
 });
 

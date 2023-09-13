@@ -13,9 +13,6 @@ exports.list = async (req, res) => {
         message: 'Could not obtain users'
       });
     } 
-    for (const u in users_list) {
-      u.remove('password'); // don't want to show the user's password hash to the frontend
-    }
     return res.status(200).json({
       success: true,
       message: 'Users obtained',
@@ -31,7 +28,7 @@ exports.list = async (req, res) => {
 
 // GET /user/:id
 exports.listById = async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) };
+  const query = { _id: req.params.id };
   try {
     const found_user = await User.findOne(query).exec();
     if(!found_user) {
@@ -40,7 +37,6 @@ exports.listById = async (req, res) => {
         message: 'User does not exist'
       });
     }
-    found_user.remove('password');
     return res.status(200).json({
       success: true,
       message: 'User obtained',
@@ -63,24 +59,22 @@ exports.listById = async (req, res) => {
 // }
 exports.create = async (req, res) => {
   const create_data = req.body;
-
   try {
     const user_passhash = await bcrypt.hash(create_data.password, SALT_ROUNDS);
-    create_data.set('password', user_passhash);
-    create_data.set('isAdmin', false);
+    create_data.password = user_passhash;
+    create_data.isAdmin  = false;
 
     // INSERT
     const new_user = new User(create_data);
     new_user.save();
 
-    //remove pasword from data for returning
-    new_user.remove('password');
     return res.status(200).json({
       success: true,
       message: 'User created successfully',
       user: new_user
     });
   } catch (error) {
+    console.log('Critical error: '+error);
     return res.status(500).json({
       success: false,
       message: error
@@ -91,7 +85,7 @@ exports.create = async (req, res) => {
 // PATCH /user/:id
 exports.update = async(req, res) => {
   const update_data = req.body;
-  const query = { _id: ObjectId(req.params.id) };
+  const query = { _id: req.params.id };
 
   try {
     if(update_data.has('password')){
@@ -105,7 +99,6 @@ exports.update = async(req, res) => {
         message: "Could not update user"
       });
     }
-    updated_user.remove('password');
     return res.status(200).json({
       success: true,
       message: "User updated successfully",
@@ -121,7 +114,7 @@ exports.update = async(req, res) => {
 
 // DELETE /user/:id
 exports.delete = async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) };
+  const query = { _id: req.params.id };
 
   try {
     const deleted_user = await User.findOneAndDelete(query).exec();
@@ -131,7 +124,6 @@ exports.delete = async (req, res) => {
         message: "Could not delete user"
       });
     }
-    deleted_user.remove('password');
     return res.status(200).json({
       success: true,
       message: "User deleted successfully",
