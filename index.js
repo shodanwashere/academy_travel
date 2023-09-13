@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 const port = process.env.PORT || 3000;
 const db_connection_string = process.env.DB_CONNECTION_STRING;
+const user = require('./route/user.route.js');
 
 mongoose.set("strictQuery", false);
 mongoose
@@ -17,6 +18,9 @@ mongoose
 app.use(express.json());
 
 app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.1" }));
+
+// Users API
+app.use('/user', user);
 
 app.listen(port, () => {
   console.log(`🚀 Academy Travel.r API up in the air: http://localhost:${ port }`)
