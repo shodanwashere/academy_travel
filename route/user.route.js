@@ -19,3 +19,5 @@ router.post('/', controller.create);
 router.patch('/:id', controller.update);
 // DELETE /user/:id
 router.delete('/:id', controller.delete);
+
+module.exports = router;
