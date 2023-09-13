@@ -4,8 +4,7 @@ A simple travel management and planning website.
 ## dotenv
 ```
 PORT=3000
-DB_NAME=
-DB_PASS=
+DB_CONNECTION_STRING=mongodb+srv://celfocusacademy:password@cluster0.0eosqom.mongodb.net/
 ```
 ## Development Guidelines:
 - Work on your specific component in a separate branch;

@@ -4,12 +4,11 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const port = process.env.PORT || 3000;
-const db_name = process.env.DB_NAME;
-const db_password = process.env.DB_PASS;
+const db_connection_string = process.env.DB_CONNECTION_STRING;
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(`mongodb+srv://celfocusacademy:${ db_password }@${ db_name }.zqhizcr.mongodb.net/test`, { useNewUrlParser: true })
+  .connect(db_connection_string, { useNewUrlParser: true })
   .then(() => {
     console.log("✅ Database connected");
   }).catch((error) => {
