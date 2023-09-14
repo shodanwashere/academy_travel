@@ -56,13 +56,13 @@ exports.listById = async (req, res) => {
 //   username
 //   password
 //   name
+//   isAdmin
 // }
 exports.create = async (req, res) => {
   const create_data = req.body;
   try {
     const user_passhash = await bcrypt.hash(create_data.password, SALT_ROUNDS);
     create_data.password = user_passhash;
-    create_data.isAdmin  = false;
 
     // INSERT
     const new_user = new User(create_data);
