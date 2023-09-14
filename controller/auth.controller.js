@@ -26,7 +26,7 @@ require('dotenv').config()
   
   // Register route
     exports.register = async (req, res) => {
-      const { username, name, password} = req.body;
+      const { username, name, password,identificationDoc,vaccination} = req.body;
 
       // Check if the username is already taken
       existingUser = await User.findOne({ username: username});
@@ -42,7 +42,9 @@ require('dotenv').config()
         username : username,
         name : name,
         password: hashedPassword,
-        isAdmin : false
+        isAdmin : false,
+        identificationDoc: identificationDoc,
+        vaccination, vaccination
       }
       );
     
