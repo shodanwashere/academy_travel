@@ -18,6 +18,7 @@ exports.list = async (req, res) => {
       message: 'Users obtained',
       users: users_list
     });
+    
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -51,7 +52,7 @@ exports.listById = async (req, res) => {
 }
 
 // POST /user
-// Assumes that all the necessary user data is in the payload
+// Assumes that all the necessary user data is in the payload - ASSUMPTIONS ARE THE MOTHER OF ALL FOCAS!
 // {
 //   username
 //   password
