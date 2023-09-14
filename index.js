@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 const db_connection_string = process.env.DB_CONNECTION_STRING;
 const user = require('./route/user.route.js');
 const trip = require('./route/trip.route.js');
+const auth = require('./route/auth.route.js');
 
 mongoose.set("strictQuery", false);
 mongoose
@@ -23,6 +24,9 @@ app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version:
 
 // Users API
 app.use('/user', user);
+
+// Auth API
+app.use('/auth', auth);
 
 //Trips API
 app.use('/trip', trip);
