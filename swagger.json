@@ -1,0 +1,435 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Travel.r API",
+    "description": "Celfocus Academy 2023 | Travel.r API",
+    "version": "1.0.0"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "development server"
+    },
+    {
+      "url": "http://ToBeDefined:3000",
+      "description": "development server"
+    }
+  ],
+  "apis": [
+    "./routes/**/*.js",
+    "./models/**/*.js"
+  ],
+  "components": {
+    "schemas": {
+      "user": {
+        "type": "object",
+        "required": [
+          "username",
+          "name",
+          "password",
+          "isAdmin"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User's username for authentication purposes",
+            "example": "diogoborges"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Diogo"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "123"
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "description": "Is the user an admin",
+            "example": "false"
+          }
+        }
+      },
+      "trip": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "creator",
+          "status",
+          "itenerary"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Trip's name",
+            "example": "Argentina"
+          },
+          "description": {
+            "type": "string",
+            "description": "Trip's description",
+            "example": "Discover Argentina's best spots in just 3 days"
+          },
+          "creator": {
+            "type": "string",
+            "description": "ID of the trip's creator",
+            "example": "6501e2573ce2dc9f63a759dc"
+          },
+          "attendees": {
+            "type": "array",
+            "description": "Users that have been assigned to this trip",
+          "example": "[{ 'user': '6501e2573ce2dc9f63a759dc' }, { 'user': '6501e2573ce2dc9f63a759dc' }]"
+          },
+          "status": {
+            "type": "boolean",
+            "description": "Is the trip active",
+            "example": true
+          },
+          "itenerary": {
+            "type": "array",
+            "description": "POI's of the trip",
+            "example": "[{ 'poi': '6501e2573ce2dc9f63a759dc', date: '14/09/2023' }, { 'poi': '6501e2573ce2dc9f63a759dc', date: '14/09/2023' }]"
+          }
+        }
+      },
+      "poi": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the place considered a point of interest",
+            "example": "Es´tadio do Dragão"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief description of what the accessed resource did",
+            "example": "Client created successfully"
+          }
+        }
+      },
+      "validationResponse": {
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "properties": {
+          "errors": {
+            "type": "array",
+            "description": "Array of errors caught by express validator",
+            "items": {
+              "type": "object",
+              "required": [
+                "msg",
+                "param",
+                "location"
+              ],
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "description": "Indication on what the cause of the error",
+                  "example": "Invalid value"
+                },
+                "param": {
+                  "type": "string",
+                  "description": "Indication on what parameter was the error caught",
+                  "example": "password"
+                },
+                "location": {
+                  "type": "string",
+                  "description": "Indication on where was the parameter supposed to come from",
+                  "example": "body"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "funcionario",
+      "description": "Registo e login de funcionários"
+    },
+    {
+      "name": "stock",
+      "description": "Gestão de stocks"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Início de sessão",
+        "description": "Permite ao funcionário iniciar sessão",
+        "tags": [
+          "funcionario"
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "numero",
+                  "password"
+                ],
+                "properties": {
+                  "numero": {
+                    "type": "int",
+                    "description": "Número do funcionário",
+                    "example": "1337"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password do funcionário",
+                    "example": "12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "true",
+                  "message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXIiOiJqb2FvQGVtYWlsLnB0In0sImlhdCI6MTY2ODI3OTM3MSwiZXhwIjoxNjY4MzY1NzcxfQ.WKRnb255S7WFGuW0w6s6REeaTNdbQJr9JszpdSTLS5c"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Some required fields are missing or are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/validationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - Invalid credentials or employee not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Employee not found"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "500 - Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funcionarios": {
+      "post": {
+        "summary": "Registo",
+        "description": "Regista um novo funcionário",
+        "tags": [
+          "funcionario"
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/funcionario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "true",
+                  "message": {
+                    "numero": 7431,
+                    "nome": "Carlos",
+                    "email": "carlos@alberto.pt",
+                    "password": "$2a$10$tpPdgckMUfwhPFVdOz3pTuJOjUowxwnzkCxbztVT7hRUPx8KAbq52",
+                    "_id": "637f918aca6d5428d8d60406",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Some required fields are missing or are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/validationResponse"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable - Employee already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Employee already exists"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "500 - Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stocks": {
+      "post": {
+        "summary": "Registo de produtos",
+        "description": "Regista um novo produto",
+        "tags": [
+          "stock"
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/stock"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "true",
+                  "message": {
+                    "codigo": 2,
+                    "nome": "Arroz",
+                    "quantTeorica": 15,
+                    "quantReal": 25,
+                    "dataAtualizacao": "2022-01-01T00:00:00.000Z",
+                    "numFuncionario": 1337,
+                    "_id": "637f934b306fdbfbc5476864",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Some required fields are missing or are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/validationResponse"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable - Product already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Product already exists"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "500 - Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/response"
+                },
+                "example": {
+                  "success": "false",
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        },
+        "security": [{
+          "bearerAuth": []
+        }]
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     required: [true, "Enter a valid value for 'description'"]
   },
   startDate: {
-    type: mongoose.Schema.Types.Date,
+    type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'startDate'"]
   },
   currency: {
