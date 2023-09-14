@@ -96,3 +96,60 @@ exports.listByCity = async (req, res) => {
     });
   }
 }
+
+function getDetails(json) {
+  const locationId = json.location_id;
+  
+  // Get the description of the place
+  const detailsUrl = `https://api.content.tripadvisor.com/api/v1/location/${locationId}/details?language=pt&currency=EUR&key=CEEE2CE7F78542A0A6079F8AC8969F1E`;
+
+  const options = {method: 'GET', headers: {accept: 'application/json'}};
+
+  // Return the fetch promise
+  return fetch(detailsUrl, options)
+  .then(response => {
+    return response.json();
+  })
+  .catch(err => {
+    throw err; // Rethrow the error to propagate it up the promise chain
+  });
+}
+
+exports.getSuggestions = async (req, res) => {
+  const url = "https://api.content.tripadvisor.com/api/v1/location/search?key=CEEE2CE7F78542A0A6079F8AC8969F1E&searchQuery=" + req.params.locationname + "&category=attractions&radius=10&radiusUnit=km&language=pt";
+
+  const options = {method: 'GET', headers: {accept: 'application/json'}};
+
+  try {
+    const response = await fetch(url, options);
+    const json = await response.json();
+
+    // Remove the first entry of the json, which is the city
+    json.data.shift();
+
+    detailsData = [];
+    const detailsPromises = json.data.map(getDetails);
+
+    // Wait for all the detailsPromises to resolve
+    detailsData = await Promise.all(detailsPromises);
+
+    // Add the details data to the json object
+    json.data.forEach((item, index) => {
+      if (!item.hasOwnProperty('error')) {
+        item.details = detailsData[index];
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Suggestions obtained',
+      suggestions: json.data
+    });
+  } catch (err) {
+    console.error("Initial Error:", err);
+    res.status(500).json({
+      success: false,
+      message: 'Error obtaining suggestions',
+    });
+  }
+}

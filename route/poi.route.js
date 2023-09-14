@@ -17,6 +17,9 @@ router.get('/id/:id', controller.listById);
 router.get('/country/:country_code', controller.listByCountry);
 // GET /poi/city/:city
 router.get('/city/:city', controller.listByCity);
+
+// GET SUGGESTIONS
+router.get('/tripadvisor/locations/:locationname', controller.getSuggestions);
 // POST /poi
 // router.post('/', controller.create);
 // // PATCH /poi/:id
