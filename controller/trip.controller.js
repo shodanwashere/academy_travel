@@ -6,7 +6,7 @@ exports.list = async (req, res) => {
   try {
     const trips_list = await Trip.find({}).exec();
     if (!trips_list) {
-      return res.status(500).json({
+      return res.status(404).json({
         success: false,
         message: 'Could not obtain trips'
       });
@@ -30,7 +30,7 @@ exports.listById = async (req, res) => {
   try {
     const found_trip = await Trip.findOne(query).exec();
     if(!found_trip) {
-      return res.status(500).json({
+      return res.status(404).json({
         success: false,
         message: 'Trip does not exist'
       });

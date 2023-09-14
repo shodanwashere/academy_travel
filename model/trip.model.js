@@ -9,8 +9,12 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'description'"]
   },
+  startDate: {
+    type: mongoose.Schema.Types.Date,
+    required: [true, "Enter a valid value for 'startDate'"]
+  },
   currency: {
-    type: mongoose.Schema.Types.Decimal128,
+    type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'currency'"]
   },
   timeZone: {
@@ -47,7 +51,7 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.Boolean,
     required: [true, "Enter a valid value for 'status'"]
   },
-  itenerary: [{
+  itinerary: [{
     name: {
       type: mongoose.Schema.Types.String,
       required: [true, "Enter a valid value for 'name'"]
