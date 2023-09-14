@@ -20,7 +20,7 @@ mongoose
 
 app.use(express.json());
 
-app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.2" }));
+app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.3" }));
 
 // Users API
 app.use('/user', user);
