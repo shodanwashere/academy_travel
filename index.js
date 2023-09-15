@@ -3,6 +3,7 @@ require("dotenv").config()
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require('cors');
 const port = process.env.PORT || 3000;
 const db_connection_string = process.env.DB_CONNECTION_STRING;
 
@@ -10,6 +11,7 @@ const db_connection_string = process.env.DB_CONNECTION_STRING;
 const user = require('./route/user.route.js');
 const trip = require('./route/trip.route.js');
 const auth = require('./route/auth.route.js');
+const poi = require('./route/poi.route.js')
 
 // Documentation
 const swaggerUi = require("swagger-ui-express"); 
@@ -24,6 +26,7 @@ mongoose
     console.log(error)
   });
 
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(express.json());
 
 // Documentação
@@ -40,6 +43,9 @@ app.use('/auth', auth);
 
 //Trips API
 app.use('/trip', trip);
+
+//Poi API
+app.use('/poi', poi);
 
 app.listen(port, () => {
   console.log(`🚀 Academy Travel.r API up in the air: http://localhost:${ port }`)

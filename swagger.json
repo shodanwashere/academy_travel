@@ -1,434 +1,371 @@
 {
   "openapi": "3.0.3",
-  "info": {
+  "info":{
     "title": "Travel.r API",
     "description": "Celfocus Academy 2023 | Travel.r API",
     "version": "1.0.0"
   },
-  "produces": [
-    "application/json"
-  ],
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "development server"
+      "description": "Development Server"
     },
     {
-      "url": "http://ToBeDefined:3000",
-      "description": "development server"
+      "url": "http://travelr-backend.cfappsecurity.com",
+      "description": "Production Server"
     }
   ],
-  "apis": [
-    "./routes/**/*.js",
-    "./models/**/*.js"
-  ],
-  "components": {
-    "schemas": {
-      "user": {
-        "type": "object",
-        "required": [
-          "username",
-          "name",
-          "password",
-          "isAdmin"
-        ],
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "User's username for authentication purposes",
-            "example": "diogoborges"
-          },
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Diogo"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "123"
-          },
-          "isAdmin": {
-            "type": "boolean",
-            "description": "Is the user an admin",
-            "example": "false"
-          }
-        }
-      },
-      "trip": {
-        "type": "object",
-        "required": [
-          "name",
-          "description",
-          "creator",
-          "status",
-          "itenerary"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Trip's name",
-            "example": "Argentina"
-          },
-          "description": {
-            "type": "string",
-            "description": "Trip's description",
-            "example": "Discover Argentina's best spots in just 3 days"
-          },
-          "creator": {
-            "type": "string",
-            "description": "ID of the trip's creator",
-            "example": "6501e2573ce2dc9f63a759dc"
-          },
-          "attendees": {
-            "type": "array",
-            "description": "Users that have been assigned to this trip",
-          "example": "[{ 'user': '6501e2573ce2dc9f63a759dc' }, { 'user': '6501e2573ce2dc9f63a759dc' }]"
-          },
-          "status": {
-            "type": "boolean",
-            "description": "Is the trip active",
-            "example": true
-          },
-          "itenerary": {
-            "type": "array",
-            "description": "POI's of the trip",
-            "example": "[{ 'poi': '6501e2573ce2dc9f63a759dc', date: '14/09/2023' }, { 'poi': '6501e2573ce2dc9f63a759dc', date: '14/09/2023' }]"
-          }
-        }
-      },
-      "poi": {
-        "type": "object",
-        "required": [
-          "name",
-          "description"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the place considered a point of interest",
-            "example": "Es´tadio do Dragão"
-          },
-          "description": {
-            "type": "string",
-            "description": "Brief description of what the accessed resource did",
-            "example": "Client created successfully"
-          }
-        }
-      },
-      "validationResponse": {
-        "type": "object",
-        "required": [
-          "errors"
-        ],
-        "properties": {
-          "errors": {
-            "type": "array",
-            "description": "Array of errors caught by express validator",
-            "items": {
-              "type": "object",
-              "required": [
-                "msg",
-                "param",
-                "location"
-              ],
-              "properties": {
-                "msg": {
-                  "type": "string",
-                  "description": "Indication on what the cause of the error",
-                  "example": "Invalid value"
-                },
-                "param": {
-                  "type": "string",
-                  "description": "Indication on what parameter was the error caught",
-                  "example": "password"
-                },
-                "location": {
-                  "type": "string",
-                  "description": "Indication on where was the parameter supposed to come from",
-                  "example": "body"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    }
-  },
   "tags": [
     {
-      "name": "funcionario",
-      "description": "Registo e login de funcionários"
+      "name": "auth",
+      "description": "Authentication operations"
     },
     {
-      "name": "stock",
-      "description": "Gestão de stocks"
+      "name": "user",
+      "description": "User CRUD operations"
+    },
+    {
+      "name": "trip",
+      "description": "Trip CRUD operations"
     }
   ],
   "paths": {
-    "/login": {
+    "/auth/register": {
       "post": {
-        "summary": "Início de sessão",
-        "description": "Permite ao funcionário iniciar sessão",
-        "tags": [
-          "funcionario"
-        ],
+        "summary": "Register a new user into the system",
         "requestBody": {
-          "required": "true",
-          "content": {
+          "required": true,
+          "content":{
             "application/json": {
-              "schema": {
+              "schema":{
                 "type": "object",
-                "required": [
-                  "numero",
-                  "password"
-                ],
                 "properties": {
-                  "numero": {
-                    "type": "int",
-                    "description": "Número do funcionário",
-                    "example": "1337"
+                  "username": {
+                    "type": "string"
                   },
                   "password": {
-                    "type": "string",
-                    "description": "Password do funcionário",
-                    "example": "12345"
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "identificationDoc": {
+                    "type": "string"
+                  },
+                  "vaccination": {
+                    "type": "string"
                   }
                 }
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successfully logged in",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
+        "tags": [ "auth" ]
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "summary": "Checks for credentials and returns the corresponding User ID, resulting in a login",
+        "requestBody": {
+          "required": true,
+          "content":{
+            "application/json": {
+              "schema":{
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [ "auth" ]
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "Returns the data for all users",
+        "tags": ["user"]
+      },
+      "post": {
+        "summary": "Creates a new user with the specified parameters",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      }
+    },
+    "/user/:id" : {
+      "get": {
+        "summary": "Returns the data for the user with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the User"
+          }
+        ],
+        "tags": ["user"]
+      },
+      "patch": {
+        "summary": "Modifies the specified fields of the user with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the User"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "delete": {
+        "summary": "Deletes the user with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the User"
+          }
+        ],
+        "tags": ["user"]
+      }
+    },
+    "/trip": {
+      "get": {
+        "summary": "Returns the data for all trips",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the User"
+          }
+        ],
+        "tags": ["trip"]
+      },
+      "post" :{
+        "summary": "Creates a new trip with the specified data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Trip"
+              }
+            }
+          }
+        },
+        "tags": ["trip"]
+      }
+    },
+    "/trip/:id": {
+      "get": {
+        "summary": "Returns the data for the trip with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the Trip"
+          }
+        ],
+        "tags": ["trip"]
+      },
+      "patch": {
+        "summary": "Modifies the specified fields of the trip with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the Trip"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Trip"
+              }
+            }
+          }
+        },
+        "tags": ["trip"]
+      },
+      "delete": {
+        "summary": "Deletes the trip with the corresponding ID, if it exists",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": "true",
+            "description": "Object ID of the Trip"
+          }
+        ],
+        "tags": ["trip"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties":{
+          "_id": {
+            "type": "string",
+            "description": "Object ID"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's username, used for authentication"
+          },
+          "password": {
+            "type": "string",
+            "description": "The user's password - plaintext on the client-side, hashed on the database"
+          },
+          "name": {
+            "type": "string",
+            "description": "The user's first and last name"
+          },
+          "identificationDoc": {
+            "type": "string",
+            "description": "The user's personal identification documents, in text form"
+          },
+          "vaccination": {
+            "type": "string",
+            "description": "The user's current vaccination booklet, in text form"
+          }
+        }
+      },
+      "Trip": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Object ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "The trip's name"
+          },
+          "description": {
+            "type": "string",
+            "description": "The trip's description, with more detailed information"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Date of the start of the trip"
+          },
+          "currency": {
+            "type": "string",
+            "description": "A small code for the destination country's currency"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "A small identifier for the destination's timezone"
+          },
+          "emergencyNumber" : {
+            "type": "number",
+            "description": "The destination country's general number for emergency services"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/User"
+          },
+          "attendees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/components/schemas/User"
                 },
-                "example": {
-                  "success": "true",
-                  "message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXIiOiJqb2FvQGVtYWlsLnB0In0sImlhdCI6MTY2ODI3OTM3MSwiZXhwIjoxNjY4MzY1NzcxfQ.WKRnb255S7WFGuW0w6s6REeaTNdbQJr9JszpdSTLS5c"
+                "ticket": {
+                  "type": "string",
+                  "description": "The ticket code"
+                },
+                "reservation": {
+                  "type": "string",
+                  "description": "The reservation code"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request - Some required fields are missing or are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/validationResponse"
-                }
-              }
-            }
+          "status": {
+            "type": "boolean",
+            "description": "is this trip still active or not"
           },
-          "404": {
-            "description": "Not found - Invalid credentials or employee not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
+          "itenerary": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the Point of Interest"
                 },
-                "example": {
-                  "success": "false",
-                  "message": "Employee not found"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "500 - Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
+                "description": {
+                  "type": "string",
+                  "description": "Description of that Point of Interest"
                 },
-                "example": {
-                  "success": "false",
-                  "message": "Internal server error"
+                "date": {
+                  "type": "string",
+                  "description": "Date/hour planed to enter in the Point of Interest"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/funcionarios": {
-      "post": {
-        "summary": "Registo",
-        "description": "Regista um novo funcionário",
-        "tags": [
-          "funcionario"
-        ],
-        "requestBody": {
-          "required": "true",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#components/schemas/funcionario"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully registered",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "true",
-                  "message": {
-                    "numero": 7431,
-                    "nome": "Carlos",
-                    "email": "carlos@alberto.pt",
-                    "password": "$2a$10$tpPdgckMUfwhPFVdOz3pTuJOjUowxwnzkCxbztVT7hRUPx8KAbq52",
-                    "_id": "637f918aca6d5428d8d60406",
-                    "__v": 0
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Some required fields are missing or are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/validationResponse"
-                }
-              }
-            }
-          },
-          "406": {
-            "description": "Not Acceptable - Employee already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "false",
-                  "message": "Employee already exists"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "500 - Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "false",
-                  "message": "Internal server error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/stocks": {
-      "post": {
-        "summary": "Registo de produtos",
-        "description": "Regista um novo produto",
-        "tags": [
-          "stock"
-        ],
-        "requestBody": {
-          "required": "true",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#components/schemas/stock"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully registered",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "true",
-                  "message": {
-                    "codigo": 2,
-                    "nome": "Arroz",
-                    "quantTeorica": 15,
-                    "quantReal": 25,
-                    "dataAtualizacao": "2022-01-01T00:00:00.000Z",
-                    "numFuncionario": 1337,
-                    "_id": "637f934b306fdbfbc5476864",
-                    "__v": 0
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Some required fields are missing or are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/validationResponse"
-                }
-              }
-            }
-          },
-          "406": {
-            "description": "Not Acceptable - Product already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "false",
-                  "message": "Product already exists"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "500 - Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#components/schemas/response"
-                },
-                "example": {
-                  "success": "false",
-                  "message": "Internal server error"
-                }
-              }
-            }
-          }
-        },
-        "security": [{
-          "bearerAuth": []
-        }]
       }
     }
   }
