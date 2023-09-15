@@ -14,7 +14,7 @@ const auth = require('./route/auth.route.js');
 
 // Documentation
 const swaggerUi = require("swagger-ui-express"); 
-const swaggerDocument = require("./swagger.yaml");
+const swaggerDocument = require("./swagger.json");
 
 mongoose.set("strictQuery", false);
 mongoose
