@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
     default: false
   },
   trips: [{
-  trip: {
+    trip: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "trip",
       required: [true, "Enter a valid value for 'trip'"]

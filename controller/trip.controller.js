@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const { Trip } = require('../model/trip.model.js');
+const { trip } = require('../model/trip.model.js');
 const { Poi } = require('../model/poi.model.js');
 const { Destination } = require('../model/destination.model.js');
 
 // GET /trip
 exports.list = async (req, res) => {
   try {
-    const trips_list = await Trip.find({}).exec();
+    const trips_list = await trip.find({}).exec();
     if (!trips_list) {
       return res.status(500).json({
         success: false,
@@ -30,7 +30,7 @@ exports.list = async (req, res) => {
 exports.listById = async (req, res) => {
   const query = { _id: req.params.id };
   try {
-    const found_trip = await Trip.findOne(query).exec();
+    const found_trip = await trip.findOne(query).exec();
     if(!found_trip) {
       return res.status(500).json({
         success: false,
@@ -54,7 +54,7 @@ exports.listById = async (req, res) => {
 exports.listTripDestinations = async (req, res) => {
   const query = { _id: req.params.id };
   try {
-    const found_trip = await Trip.findOne(query).exec();
+    const found_trip = await trip.findOne(query).exec();
     if(!found_trip) {
       return res.status(500).json({
         success: false,
@@ -77,7 +77,7 @@ exports.listTripDestinations = async (req, res) => {
 // GET /trip/attendee/:id
 exports.listAttendeeTrips = async (req, res) => {
   try {
-    const found_trips = await Trip.find({ attendees : { "$in" : [req.params.id] }}).exec();
+    const found_trips = await trip.find({ attendees : { "$in" : [req.params.id] }}).exec();
     if(!found_trips) {
       return res.status(500).json({
         success: false,
@@ -189,7 +189,7 @@ exports.delete = async (req, res) => {
   const query = { _id: req.params.id };
 
   try {
-    const deleted_trip = await Trip.findOneAndDelete(query).exec();
+    const deleted_trip = await trip.findOneAndDelete(query).exec();
     if(!deleted_user) {
       return res.status(500).json({
         success: false,

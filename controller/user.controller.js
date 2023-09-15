@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const { User } = require('../model/user.model.js');
+const { user } = require('../model/user.model.js');
 const bcrypt   = require('bcrypt');
 const SALT_ROUNDS = 10;
 
 // GET /user
 exports.list = async (req, res) => {
   try {
-    const users_list = await User.find({}).exec();
+    const users_list = await user.find({}).exec();
     if (!users_list) {
       return res.status(500).json({
         success: false,
@@ -31,7 +31,9 @@ exports.list = async (req, res) => {
 exports.listById = async (req, res) => {
   const query = { _id: req.params.id };
   try {
-    const found_user = await User.findOne(query).exec();
+    const found_user = await user.findOne(query)
+    .populate('trips.trip')
+    .exec();
     if(!found_user) {
       return res.status(500).json({
         success: false,
