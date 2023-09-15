@@ -174,7 +174,7 @@ exports.create = async (req, res) => {
 }
 
 exports.createFn = async (poi) => {
-  const poi = new Poi(poi);
-  const saved_poi = await poi.save();
+  const created_poi = new Poi(poi);
+  const saved_poi = await created_poi.save();
   return saved_poi;
-};
+}

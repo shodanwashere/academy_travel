@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { Trip } = require('../model/trip.model.js');
+const { DestinationController } = require('../controller/destination.controller.js');
+const { PoiController } = require('../controller/poi.controller.js');
 
 // GET /trip
 exports.list = async (req, res) => {
@@ -48,6 +50,30 @@ exports.listById = async (req, res) => {
   }
 }
 
+// GET /trip/:id/destinations
+exports.listTripDestinations = async (req, res) => {
+  const query = { _id: req.params.id };
+  try {
+    const found_trip = await Trip.findOne(query).exec();
+    if(!found_trip) {
+      return res.status(500).json({
+        success: false,
+        message: 'Trip does not exist'
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Trip destinations obtained',
+      destinations: res.body.destinations
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error
+    });
+  }
+}
+
 // GET /trip/attendee/:id
 exports.listAttendeeTrips = async (req, res) => {
   try {
@@ -75,21 +101,40 @@ exports.listAttendeeTrips = async (req, res) => {
 // Assumes that all the necessary trip data is in the payload
 // {
 //   name
-//   description
-//   creator
-//   atendees
-//   status
-//   itenerary
+//   startDate
+//   endDate
+//   destinations
 //   {
-//      poi
-//      date
+//      destination
 //   }
+//   status
 // }
 
 exports.create = async (req, res) => {
-  const create_data = req.body;
   try {
+    const create_data = req.body;
+    const destinations_list = create_data.destinations;
+    console.log('Initiating Trip Creation!')
+    console.log(create_data);
     // INSERT
+    // checking each destination
+    const destination_ids = new Array();
+    for (var i = 0; i < destinations_list.length; i++) {
+      console.log('\tCreating Destination with data:');
+      console.log(destinations_list[i]);
+      // checking each POI in this destination
+      const poi_ids = new Array();
+      const pois_list = destinations_list[i].itenerary;
+      for (var j = 0; j < pois_list.length; j++){
+        const poi_data = pois_list[j]
+        const poi_res = PoiController.createFn(poi_data);
+        console.log('POI Created: '+ poi_res._id);
+        poi_ids.push({ poi: poi_res._id });
+      }
+      const dest_res = DestinationController.createFn(destinations_list[i], pois_list);
+      destination_ids.push({ destination: dest_res._id });
+    }
+    create_data.destinations = destination_ids;
     const new_trip = new Trip(create_data);
     await new_trip.save();
 
@@ -155,62 +200,5 @@ exports.delete = async (req, res) => {
       success: false,
       message: error
     })
-  }
-}
-
-function getDetails(json) {
-  const locationId = json.location_id;
-  
-  // Get the description of the place
-  const detailsUrl = `https://api.content.tripadvisor.com/api/v1/location/${locationId}/details?language=pt&currency=EUR&key=CEEE2CE7F78542A0A6079F8AC8969F1E`;
-
-  const options = {method: 'GET', headers: {accept: 'application/json'}};
-
-  // Return the fetch promise
-  return fetch(detailsUrl, options)
-  .then(response => {
-    return response.json();
-  })
-  .catch(err => {
-    throw err; // Rethrow the error to propagate it up the promise chain
-  });
-}
-
-exports.getSuggestions = async (req, res) => {
-  const url = "https://api.content.tripadvisor.com/api/v1/location/search?key=CEEE2CE7F78542A0A6079F8AC8969F1E&searchQuery=" + req.params.locationname + "&category=attractions&radius=10&radiusUnit=km&language=pt";
-
-  const options = {method: 'GET', headers: {accept: 'application/json'}};
-
-  try {
-    const response = await fetch(url, options);
-    const json = await response.json();
-
-    // Remove the first entry of the json, which is the city
-    json.data.shift();
-
-    detailsData = [];
-    const detailsPromises = json.data.map(getDetails);
-
-    // Wait for all the detailsPromises to resolve
-    detailsData = await Promise.all(detailsPromises);
-
-    // Add the details data to the json object
-    json.data.forEach((item, index) => {
-      if (!item.hasOwnProperty('error')) {
-        item.details = detailsData[index];
-      }
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Suggestions obtained',
-      suggestions: json.data
-    });
-  } catch (err) {
-    console.error("Initial Error:", err);
-    res.status(500).json({
-      success: false,
-      message: 'Error obtaining suggestions',
-    });
   }
 }
