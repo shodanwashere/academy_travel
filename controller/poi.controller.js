@@ -1,5 +1,7 @@
 const { Poi } = require('../model/poi.model.js');
 
+
+  
 exports.list = async (req, res) => {
   try {
     const poi_list = await Poi.find({}).exec();
@@ -153,3 +155,26 @@ exports.getSuggestions = async (req, res) => {
     });
   }
 }
+
+exports.create = async (req, res) => {
+  const poi = new Poi(req.body);
+  try {
+    const saved_poi = await poi.save();
+    return res.status(200).json({
+      success: true,
+      message: 'POI created',
+      poi: saved_poi
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error
+    });
+  }
+}
+
+exports.createFn = async (poi) => {
+  const poi = new Poi(poi);
+  const saved_poi = await poi.save();
+  return saved_poi;
+};

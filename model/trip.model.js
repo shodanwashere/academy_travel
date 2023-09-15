@@ -26,7 +26,7 @@ const schema = new mongoose.Schema({
       type: mongoose.Schema.Types.Date,
       required: [true, "Enter a valid value for 'date'"]
     }
-  }]
+  }],
   status: {
     type: mongoose.Schema.Types.Boolean,
     required: [true, "Enter a valid value for 'status'"]
