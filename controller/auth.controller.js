@@ -17,10 +17,16 @@ require('dotenv').config()
     const isValid = await bcrypt.compare(password, existingUser.password);
     if (!isValid) return res.status(401).json({ error: 'Invalid credentials:password' });
 
-    return res.status(200).json({user: existingUser});
+    return res.status(200).json({
+      success: true,
+      user: existingUser
+    });
     }
       catch (error) {
-      return res.status(500).json({ error: error });
+      return res.status(500).json({
+        success: false,
+        error: error
+      });
     }
   };
   
