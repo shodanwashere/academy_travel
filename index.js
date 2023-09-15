@@ -14,7 +14,7 @@ const auth = require('./route/auth.route.js');
 
 // Documentation
 const swaggerUi = require("swagger-ui-express"); 
-const swaggerDocument = require("./swagger.json");
+const swaggerDocument = require("./swagger.yaml");
 
 mongoose.set("strictQuery", false);
 mongoose
@@ -25,7 +25,7 @@ mongoose
     console.log(error)
   });
 
-app.use(cors());
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(express.json());
 
 // Documentação
