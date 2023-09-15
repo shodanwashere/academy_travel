@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'reservation'"]
   },
-  itenerary: [{
+  itinerary: [{
     poi:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "poi",
@@ -42,4 +42,4 @@ const schema = new mongoose.Schema({
  }]
 });
 
-exports.Trip = mongoose.model("destination", schema);
+exports.Destination = mongoose.model("destination", schema);

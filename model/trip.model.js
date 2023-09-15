@@ -13,18 +13,11 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'endDate'"]
   },
-  itinerary: [{
-    name: {
-      type: mongoose.Schema.Types.String,
-      required: [true, "Enter a valid value for 'name'"]
-    },
-    description: {
-      type: mongoose.Schema.Types.String,
-      required: [true, "Enter a valid value for 'description'"]
-    },
-    date: {
-      type: mongoose.Schema.Types.Date,
-      required: [true, "Enter a valid value for 'date'"]
+  destinations: [{
+    destination: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "destination",
+      required: [true, "Enter a valid value for 'destination'"]
     }
   }],
   status: {

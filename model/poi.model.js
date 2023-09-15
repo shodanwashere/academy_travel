@@ -16,6 +16,14 @@ const schema = new mongoose.Schema({
   description: {
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'description'"]
+  },
+  date: {
+    type: mongoose.Schema.Types.String,
+    required: [true, "Enter a valid value for 'date'"]
+  },
+  hour: {
+    type: mongoose.Schema.Types.String,
+    required: [true, "Enter a valid value for 'hour'"]
   }
 });
 

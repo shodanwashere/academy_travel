@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Trip } = require('../model/trip.model.js');
-const { DestinationController } = require('../controller/destination.controller.js');
-const { PoiController } = require('../controller/poi.controller.js');
+const { Poi } = require('../model/poi.model.js');
+const { Destination } = require('../model/destination.model.js');
 
 // GET /trip
 exports.list = async (req, res) => {
@@ -115,24 +115,30 @@ exports.create = async (req, res) => {
     const create_data = req.body;
     const destinations_list = create_data.destinations;
     console.log('Initiating Trip Creation!')
-    console.log(create_data);
     // INSERT
     // checking each destination
     const destination_ids = new Array();
     for (var i = 0; i < destinations_list.length; i++) {
-      console.log('\tCreating Destination with data:');
-      console.log(destinations_list[i]);
+      console.log('Creating Destination '+i);
       // checking each POI in this destination
       const poi_ids = new Array();
-      const pois_list = destinations_list[i].itenerary;
+      const pois_list = destinations_list[i].itinerary;
       for (var j = 0; j < pois_list.length; j++){
+        console.log('Creating POI '+j);
         const poi_data = pois_list[j]
-        const poi_res = PoiController.createFn(poi_data);
-        console.log('POI Created: '+ poi_res._id);
-        poi_ids.push({ poi: poi_res._id });
+
+        const created_poi = new Poi(poi_data);
+        await created_poi.save();
+        console.log('POI Created: '+ created_poi._id);
+        poi_ids.push({ poi: created_poi._id });
       }
-      const dest_res = DestinationController.createFn(destinations_list[i], pois_list);
-      destination_ids.push({ destination: dest_res._id });
+      const dest_data = destinations_list[i];
+      dest_data.itinerary = poi_ids;
+      console.log(dest_data)
+      const created_dest = new Destination(dest_data);
+      await created_dest.save();
+      destination_ids.push({ destination: created_dest._id });
+      console.log("Created Destination: "+created_dest._id);
     }
     create_data.destinations = destination_ids;
     const new_trip = new Trip(create_data);
