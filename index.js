@@ -10,6 +10,7 @@ const db_connection_string = process.env.DB_CONNECTION_STRING;
 const user = require('./route/user.route.js');
 const trip = require('./route/trip.route.js');
 const auth = require('./route/auth.route.js');
+const poi = require('./route/poi.route.js')
 
 // Documentation
 const swaggerUi = require("swagger-ui-express"); 
@@ -40,6 +41,9 @@ app.use('/auth', auth);
 
 //Trips API
 app.use('/trip', trip);
+
+//Poi API
+app.use('/poi', poi);
 
 app.listen(port, () => {
   console.log(`🚀 Academy Travel.r API up in the air: http://localhost:${ port }`)
