@@ -10,6 +10,7 @@ const db_connection_string = process.env.DB_CONNECTION_STRING;
 // Routes
 const user = require('./route/user.route.js');
 const trip = require('./route/trip.route.js');
+const destination = require('./route/destination.route.js');
 const auth = require('./route/auth.route.js');
 const poi = require('./route/poi.route.js')
 
@@ -33,7 +34,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true })); 
 
 app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.4" }));
-app.get('/tripadvisor/locations/:locationname', require("./controller/trip.controller.js").getSuggestions);
+app.get('/tripadvisor/locations/:locationname', require("./controller/poi.controller.js").getSuggestions);
 
 // Users API
 app.use('/user', user);
@@ -43,6 +44,9 @@ app.use('/auth', auth);
 
 //Trips API
 app.use('/trip', trip);
+
+//Destination API
+app.use('/destination', destination)
 
 //Poi API
 app.use('/poi', poi);
