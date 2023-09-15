@@ -3,6 +3,7 @@ require("dotenv").config()
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require('cors');
 const port = process.env.PORT || 3000;
 const db_connection_string = process.env.DB_CONNECTION_STRING;
 
@@ -25,12 +26,13 @@ mongoose
     console.log(error)
   });
 
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(express.json());
 
 // Documentação
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true })); 
 
-app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.1" }));
+app.get("/", (req, res) => res.status(200).send({ name: "Travel.r API", version: "0.4" }));
 app.get('/tripadvisor/locations/:locationname', require("./controller/trip.controller.js").getSuggestions);
 
 // Users API

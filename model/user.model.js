@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
   },
   isAdmin: {
     type: mongoose.Schema.Types.Boolean,
-    required: [true, "Enter a valid value for 'isAdmin'"]
+    default: false
   },
   identificationDoc: {
     type: mongoose.Schema.Types.String,

@@ -48,6 +48,29 @@ exports.listById = async (req, res) => {
   }
 }
 
+// GET /trip/attendee/:id
+exports.listAttendeeTrips = async (req, res) => {
+  try {
+    const found_trips = await Trip.find({ attendees : { "$in" : [req.params.id] }}).exec();
+    if(!found_trips) {
+      return res.status(500).json({
+        success: false,
+        message: 'User is not attending any trips'
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Attendee trips obtained',
+      trips: found_trips
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error
+    });
+  }
+}
+
 // POST /trip
 // Assumes that all the necessary trip data is in the payload
 // {
