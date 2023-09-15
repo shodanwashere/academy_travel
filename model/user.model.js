@@ -18,6 +18,11 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.Boolean,
     default: false
   },
+  trip: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "trip",
+      required: [true, "Enter a valid value for 'trip'"]
+    },
   identificationDoc: {
     type: mongoose.Schema.Types.String,
     required: [true, "Enter a valid value for 'identificationDoc'"]
