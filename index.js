@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 const db_connection_string = process.env.DB_CONNECTION_STRING;
-
+const https = require('https');
+const fs = require('fs');
 // Routes
 const user = require('./route/user.route.js');
 const trip = require('./route/trip.route.js');
@@ -47,6 +48,13 @@ app.use('/trip', trip);
 //Poi API
 app.use('/poi', poi);
 
-app.listen(port, () => {
-  console.log(`🚀 Academy Travel.r API up in the air: http://localhost:${ port }`)
+https.createServer({
+  key: fs.readFileSync('privkey.pem'),
+  cert: fs.readFileSync('cert.pem')
+}, app).listen(443, ()=>{
+  console.log(`🚀 Academy Travel.r API up in the air: http://localhost:443`)
 });
+
+//app.listen(port, () => {
+  //console.log(`🚀 Academy Travel.r API up in the air: http://localhost:${ port }`)
+//});

@@ -1,6 +1,6 @@
 *.txt
 .env
 node_modules/*
-*.pem
+backend.pem
 .terraform*
 *.tfstate*
