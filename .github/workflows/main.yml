@@ -1,0 +1,13 @@
+on:
+  push:
+    branches:
+    - master
+jobs:
+  my_job:
+    name: something
+    runs-on: ubuntu-18.04
+    env:
+      Message: "Shut up"
+    steps:
+    - run: echo $Message
+    
