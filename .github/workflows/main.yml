@@ -5,7 +5,7 @@ on:
 jobs:
   my_job:
     name: something
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env:
       Message: "Shut up"
     steps:
